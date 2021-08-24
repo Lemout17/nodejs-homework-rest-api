@@ -1,15 +1,76 @@
-// const fs = require('fs/promises')
-// const contacts = require('./contacts.json')
+const fs = require('fs/promises')
+const path = require('path')
 
-const listContacts = async () => {}
+const contactsPath = path.join(__dirname, './contacts.json')
 
-const getContactById = async (contactId) => {}
+const listContacts = async () => {
+  const data = await fs.readFile(contactsPath)
+  const contactsList = JSON.parse(data)
+  return contactsList
+}
 
-const removeContact = async (contactId) => {}
+const getContactById = async (contactId) => {
+  const contactsList = await listContacts()
+  const selectContact = contactsList.find(
+    (item) => item.id === Number(contactId)
+  )
 
-const addContact = async (body) => {}
+  if (!selectContact) {
+    return null
+  }
 
-const updateContact = async (contactId, body) => {}
+  return selectContact
+}
+
+const removeContact = async (contactId) => {
+  const contactsList = await listContacts()
+  const contactIndex = contactsList.findIndex(
+    (item) => item.id === Number(contactId)
+  )
+
+  if (contactIndex === -1) {
+    return null
+  }
+
+  const removedContact = await contactsList.splice(contactIndex, 1)
+  await fs.writeFile(contactsPath, JSON.stringify(contactsList))
+
+  return removedContact
+}
+
+const addContact = async (body) => {
+  const contactsList = await listContacts()
+
+  function getNextUniqId(arr) {
+    return Math.max(...arr.map((contact) => contact.id)) + 1
+  }
+
+  const addNewContact = {
+    id: getNextUniqId(contactsList),
+    ...body,
+  }
+
+  contactsList.push(addNewContact)
+
+  await fs.writeFile(contactsPath, JSON.stringify(contactsList))
+
+  return addNewContact
+}
+
+const updateContact = async (contactId, body) => {
+  const contactsList = await listContacts()
+  const contactIndex = await contactsList.findIndex(
+    (item) => item.id === Number(contactId)
+  )
+
+  if (!contactIndex) {
+    return null
+  }
+
+  contactsList[contactIndex] = { ...contactsList[contactIndex], ...body }
+  await fs.writeFile(contactsPath, JSON.stringify(contactsList))
+  return contactsList[contactIndex]
+}
 
 module.exports = {
   listContacts,
