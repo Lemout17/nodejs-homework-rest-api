@@ -63,7 +63,7 @@ const updateContact = async (contactId, body) => {
     (item) => item.id === Number(contactId)
   )
 
-  if (!contactIndex) {
+  if (contactIndex === -1) {
     return null
   }
 
