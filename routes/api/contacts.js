@@ -3,6 +3,8 @@ const router = express.Router()
 
 const contactsOperations = require('../../model/index')
 
+const { contactsSchema } = require('../../validation')
+
 router.get('/', async (req, res, next) => {
   try {
     const contacts = await contactsOperations.listContacts()
@@ -13,19 +15,73 @@ router.get('/', async (req, res, next) => {
 })
 
 router.get('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
+  try {
+    const { contactId } = req.params
+
+    const contacts = await contactsOperations.getContactById(contactId)
+
+    if (!contacts) {
+      res.status(404).json({ message: 'Not found' })
+    }
+
+    res.json({ contacts })
+  } catch (error) {
+    next(error)
+  }
 })
 
 router.post('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
+  try {
+    const { error } = contactsSchema.validate(req.body)
+
+    if (error) {
+      return res.status(400).json({ message: 'missing required name field' })
+    }
+
+    const contacts = await contactsOperations.addContact(req.body)
+
+    res.status(201).json({ contacts })
+  } catch (error) {
+    next(error)
+  }
 })
 
 router.delete('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
+  try {
+    const { contactId } = req.params
+
+    const contacts = await contactsOperations.removeContact(contactId)
+
+    if (!contacts) {
+      return res.status(404).json({ message: 'Not found' })
+    }
+
+    res.status(200).json({ message: 'contact deleted' })
+  } catch (error) {
+    next(error)
+  }
 })
 
-router.patch('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
+router.put('/:contactId', async (req, res, next) => {
+  try {
+    const { error } = contactsSchema.validate(req.body)
+
+    if (error) {
+      return res.status(400).json({ message: 'missing fields' })
+    }
+
+    const { contactId } = req.params
+
+    const contacts = await contactsOperations.updateContact(contactId, req.body)
+
+    if (!contacts) {
+      return res.status(404).json({ message: 'Not found' })
+    }
+
+    res.status(200).json({ contacts })
+  } catch (error) {
+    next(error)
+  }
 })
 
 module.exports = router
