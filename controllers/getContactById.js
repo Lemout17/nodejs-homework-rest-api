@@ -1,10 +1,10 @@
-const contactsOperations = require('../model/index')
+const { Contact } = require('../models')
 
 const getContactById = async (req, res, next) => {
   try {
     const { contactId } = req.params
 
-    const contacts = await contactsOperations.getContactById(contactId)
+    const contacts = await Contact.findById(contactId)
 
     if (!contacts) {
       return res.status(404).json({ message: 'Not found' })

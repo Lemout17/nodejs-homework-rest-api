@@ -1,17 +1,12 @@
-const contactsOperations = require('../model/index')
-const { contactsSchema } = require('../validation')
+const { Contact } = require('../models')
 
 const updateContact = async (req, res, next) => {
   try {
-    const { error } = contactsSchema.validate(req.body)
-
-    if (error) {
-      return res.status(400).json({ message: 'missing fields' })
-    }
-
     const { contactId } = req.params
 
-    const contacts = await contactsOperations.updateContact(contactId, req.body)
+    const contacts = await Contact.findByIdAndUpdate(contactId, req.body, {
+      new: true,
+    })
 
     if (!contacts) {
       return res.status(404).json({ message: 'Not found' })

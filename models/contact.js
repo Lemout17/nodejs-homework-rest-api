@@ -23,13 +23,14 @@ const contactSchema = Schema(
       default: false,
     },
   },
-  { versionKey: false, timeStamps: true }
+  { versionKey: false, timestamps: true }
 )
 
 const JoiContactSchema = Joi.object({
   name: Joi.string().min(3).required(),
   email: Joi.string().pattern(emailRegexp).required(),
   phone: Joi.string().pattern(phoneRegexp).required(),
+  favorite: Joi.boolean(),
 })
 
 const Contact = model('contact', contactSchema)
