@@ -10,8 +10,8 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log('Database connection successful'))
   .then(() => {
+    console.log('Database connection successful')
     app.listen(PORT, () => {
       console.log(`Server running. Use our API on port: ${PORT}`)
     })

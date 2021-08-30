@@ -1,11 +1,11 @@
 const { Contact } = require('../models')
 
-const updateFavorite = async (req, res, next) => {
+const updateStatusContact = async (req, res, next) => {
   try {
     const { contactId } = req.params
     const { favorite } = req.body
 
-    if (!favorite) {
+    if (favorite === undefined) {
       return res.status(400).json({
         message: 'missing field favorite',
       })
@@ -31,4 +31,4 @@ const updateFavorite = async (req, res, next) => {
   }
 }
 
-module.exports = updateFavorite
+module.exports = updateStatusContact
