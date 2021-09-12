@@ -1,23 +1,51 @@
-const express = require('express')
-const router = express.Router()
+const router = require('express').Router()
 
-const { JoiContactSchema } = require('../../models/contact')
-const { validation } = require('../../middlewares')
+const { contacts: ctrl } = require('../../controllers')
+const { contactJoiSchema } = require('../../models/contact')
+const {
+  validation,
+  tryCatchWrapper,
+  authenticate,
+} = require('../../middlewares')
 
-const validationMiddleware = validation(JoiContactSchema)
+const validationContactMiddleware = validation(contactJoiSchema)
 
-const ctrl = require('../../controllers')
+router.get(
+  '/',
+  tryCatchWrapper(authenticate),
+  tryCatchWrapper(ctrl.listContacts)
+)
 
-router.get('/', ctrl.listContacts)
+router.get(
+  '/:contactId',
+  tryCatchWrapper(authenticate),
+  tryCatchWrapper(ctrl.getContactById)
+)
 
-router.get('/:contactId', ctrl.getContactById)
+router.post(
+  '/',
+  tryCatchWrapper(authenticate),
+  validationContactMiddleware,
+  tryCatchWrapper(ctrl.addContact)
+)
 
-router.post('/', validationMiddleware, ctrl.addContact)
+router.delete(
+  '/:contactId',
+  tryCatchWrapper(authenticate),
+  tryCatchWrapper(ctrl.removeContact)
+)
 
-router.delete('/:contactId', ctrl.removeContact)
+router.put(
+  '/:contactId',
+  tryCatchWrapper(authenticate),
+  validationContactMiddleware,
+  tryCatchWrapper(ctrl.updateContact)
+)
 
-router.put('/:contactId', validationMiddleware, ctrl.updateContact)
-
-router.patch('/:contactId/favorite', ctrl.updateStatusContact)
+router.patch(
+  '/:contactId/favorite',
+  tryCatchWrapper(authenticate),
+  tryCatchWrapper(ctrl.updateStatusContact)
+)
 
 module.exports = router
