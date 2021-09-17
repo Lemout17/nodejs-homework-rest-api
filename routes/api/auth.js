@@ -5,6 +5,7 @@ const {
   validation,
   tryCatchWrapper,
   authenticate,
+  upload,
 } = require('../../middlewares')
 
 const { auth: ctrl } = require('../../controllers')
@@ -27,6 +28,13 @@ router.get(
   '/current',
   tryCatchWrapper(authenticate),
   tryCatchWrapper(ctrl.current)
+)
+
+router.patch(
+  '/avatars',
+  tryCatchWrapper(authenticate),
+  upload.single('avatar'),
+  tryCatchWrapper(ctrl.updateAvatar)
 )
 
 module.exports = router

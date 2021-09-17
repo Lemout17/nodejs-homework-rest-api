@@ -11,9 +11,12 @@ const signup = async (req, res) => {
   if (user) {
     throw new Conflict('Email in use')
   }
+
   const defaultImage = gravatar.url(email, { s: '250' }, true)
 
-  const newUser = new User({ email, avatarUrl: defaultImage })
+  console.log(defaultImage)
+
+  const newUser = new User({ email, avatarURL: defaultImage })
   newUser.setPassword(password)
   await newUser.save()
 
