@@ -17,6 +17,8 @@ router.post('/signup', userValidationMiddleware, tryCatchWrapper(ctrl.register))
 
 router.get('/verify/:verifyToken', tryCatchWrapper(ctrl.verifyEmail))
 
+router.post('/verify', tryCatchWrapper(ctrl.sendAgainToVerify))
+
 router.post('/login', userValidationMiddleware, tryCatchWrapper(ctrl.login))
 
 router.get(
