@@ -18,7 +18,7 @@ const updateAvatar = async (req, res) => {
 
     await fs.mkdir(uploadPath)
     await fs.rename(tempPath, avatarPath)
-    const avatar = `/public/avatars/${_id}/${originalname}`
+    const avatar = `/avatars/${_id}/${originalname}`
     await User.findByIdAndUpdate(_id, { avatar })
     res.json({
       status: 'success',
