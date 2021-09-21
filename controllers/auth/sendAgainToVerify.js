@@ -4,11 +4,12 @@ const { sendMail } = require('../../utils')
 
 const sendAgainToVerify = async (req, res) => {
   const { email } = req.body
-  const user = await User.findOne({ email })
 
   if (!email) {
     throw new BadRequest('Email is required')
   }
+
+  const user = await User.findOne({ email })
 
   if (!user) {
     throw new NotFound('Not found')
@@ -24,7 +25,9 @@ const sendAgainToVerify = async (req, res) => {
     html: `<a href="http://localhost:3000/api/users/verify/${user.verifyToken}">Confirm registration!</a>`,
   }
 
-  await sendMail(data)
+  const fromEmail = 'djutsu17@gmail.com'
+
+  await sendMail(data, fromEmail)
 
   res.json({ message: 'Verification email sent' })
 }

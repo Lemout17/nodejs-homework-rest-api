@@ -25,8 +25,9 @@ const signup = async (req, res) => {
     subject: 'Registration successful',
     html: `<a href="http://localhost:3000/api/users/verify/${verifyToken}">Confirm registration!</a>`,
   }
+  const fromEmail = 'djutsu17@gmail.com'
 
-  await sendMail(data)
+  await sendMail(data, fromEmail)
 
   await newUser.save()
 

@@ -5,9 +5,9 @@ const { SENDGRID_API_KEY } = process.env
 
 sgMail.setApiKey(SENDGRID_API_KEY)
 
-const sendMail = async (data) => {
+const sendMail = async (data, email) => {
   try {
-    const mail = { ...data, from: 'djutsu17@gmail.com' }
+    const mail = { ...data, from: email }
     await sgMail.send(mail)
   } catch (error) {
     throw new NotFound(error.message)
